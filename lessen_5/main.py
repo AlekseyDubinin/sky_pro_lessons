@@ -1,6 +1,10 @@
 from collections import Counter
 import random
 
+
+with open('russian_word.txt', 'r', encoding='UTF-8') as file:
+    contents = file.read()
+
 dict_alfa = {"а": 8, "б": 2, "в": 4, "г": 2, "д": 4, "е": 8, "ё": 1, "ж": 1, "з": 2, "и": 5, "й": 1, "к": 4, "л": 4,
              "м": 3, "н": 5, "о": 10, "п": 4, "р": 5, "с": 5, "т": 5, "у": 4, "ф": 1, "х": 1, "ц": 1, "ч": 1, "ш": 1,
              "щ": 1, "ъ": 1, "ы": 2, "ь": 2, "э": 1, "ю": 1, "я": 2}
@@ -12,7 +16,7 @@ points = {
     6: 8}
 
 
-def dictionary_processing(keys_list: list, number_letters=7) -> list:
+def dictionary_processing(keys_list: list, number_letters=7):
     try:
         for i in range(number_letters):
             keys_list.append(random.choice(list(dict_alfa)))
@@ -20,9 +24,9 @@ def dictionary_processing(keys_list: list, number_letters=7) -> list:
             if dict_alfa[keys_list[i]] == 0:
                 del dict_alfa[keys_list[i]]
         return keys_list
-    except ValueError:
+    except IndexError:
         print("Буквы закончились")
-        return keys_list
+        return 0
 
 
 def word_check(answer: str, letters: str, keys_list: list, name: str):
@@ -30,8 +34,6 @@ def word_check(answer: str, letters: str, keys_list: list, name: str):
         print('У вас нет таких букв, пробуйте еще раз')
         return False, 0
     else:
-        with open('russian_word.txt', 'r', encoding='UTF-8') as file:
-            contents = file.read()
         new_letter = []
         poin = 0
         if answer in contents:
@@ -39,7 +41,9 @@ def word_check(answer: str, letters: str, keys_list: list, name: str):
             print('Программа:\nТакое слово есть.')
             print(f'{name} получает {poin} баллов.')
             dictionary_processing(new_letter, len(answer) + 1)
-            if len(new_letter) == 0:
+            if len(new_letter) < len(answer) + 1:
+                return 0, poin
+            elif len(new_letter) == 0:
                 return 0, poin
             else:
                 print('Добавляю буквы', ', '.join(new_letter))
@@ -51,8 +55,11 @@ def word_check(answer: str, letters: str, keys_list: list, name: str):
             print('Программа:\nТакого слова нет.')
             print(f'{name} не получает очков.')
             dictionary_processing(new_letter, 1)
-            print('Добавляю букву', ', '.join(new_letter))
-            return new_letter, poin
+            if len(new_letter) == 0:
+                return 0, poin
+            else:
+                print('Добавляю букву', ', '.join(new_letter))
+                return new_letter, poin
 
 
 def search_winner() -> None:
@@ -75,10 +82,10 @@ def main(keys_one, point_all_one, keys_two, point_all_two):
                 print('Таких коротких слов нет, пробуй еще раз')
                 continue
             wer, point = word_check(user_answer, ''.join(keys_one), keys_one, user_one)
-            if not wer:
-                continue
-            elif len(wer) == 0:
+            if wer == 0:
                 break
+            elif not wer:
+                continue
             keys_one += wer
             point_all_one += point
 
