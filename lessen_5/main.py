@@ -1,11 +1,9 @@
 from collections import Counter
 import random
 
-
 dict_alfa = {"а": 8, "б": 2, "в": 4, "г": 2, "д": 4, "е": 8, "ё": 1, "ж": 1, "з": 2, "и": 5, "й": 1, "к": 4, "л": 4,
              "м": 3, "н": 5, "о": 10, "п": 4, "р": 5, "с": 5, "т": 5, "у": 4, "ф": 1, "х": 1, "ц": 1, "ч": 1, "ш": 1,
              "щ": 1, "ъ": 1, "ы": 2, "ь": 2, "э": 1, "ю": 1, "я": 2}
-
 
 points = {
     3: 3,
@@ -32,29 +30,29 @@ def word_check(answer: str, letters: str, keys_list: list, name: str):
         print('У вас нет таких букв, пробуйте еще раз')
         return False, 0
     else:
-        with open('russian_word.txt') as file:
+        with open('russian_word.txt', 'r', encoding='UTF-8') as file:
             contents = file.read()
-            new_letter = []
-            poin = 0
-            if answer in contents:
-                poin = points[len(answer)]
-                print('Программа:\nТакое слово есть.')
-                print(f'{name} получает {poin} баллов.')
-                dictionary_processing(new_letter, len(answer))
-                if len(new_letter) == 0:
-                    return 0, poin
-                else:
-                    print('Добавляю буквы', ', '.join(new_letter))
-                    for i in answer:
-                        if i in keys_list:
-                            keys_list.remove(i)
-                    return new_letter, poin
+        new_letter = []
+        poin = 0
+        if answer in contents:
+            poin = points[len(answer)]
+            print('Программа:\nТакое слово есть.')
+            print(f'{name} получает {poin} баллов.')
+            dictionary_processing(new_letter, len(answer) + 1)
+            if len(new_letter) == 0:
+                return 0, poin
             else:
-                print('Программа:\nТакого слова нет.')
-                print(f'{name} не получает очков.')
-                dictionary_processing(new_letter, 1)
-                print('Добавляю букву', ', '.join(new_letter))
+                print('Добавляю буквы', ', '.join(new_letter))
+                for i in answer:
+                    if i in keys_list:
+                        keys_list.remove(i)
                 return new_letter, poin
+        else:
+            print('Программа:\nТакого слова нет.')
+            print(f'{name} не получает очков.')
+            dictionary_processing(new_letter, 1)
+            print('Добавляю букву', ', '.join(new_letter))
+            return new_letter, poin
 
 
 def search_winner() -> None:
@@ -64,31 +62,14 @@ def search_winner() -> None:
         print(f'Выигрывает {user_two}.\nСчет {point_all_two}:{point_all_one}')
 
 
-if __name__ == '__main__':
-    print('Программа:\nПривет.\nМы начинаем играть в Scrabble\n\nКак зовут первого игрока? ')
-
-    user_one = input('Пользователь:\n')
-
-    print('Программа:\nКак зовут второго игрока? ')
-
-    user_two = input('Пользователь:\n')
-
-    print(f'Программа:\n{user_one} vs {user_two}\n(раздаю случайные буквы)')
-    keys_one = []
-    keys_two = []
-    point_all_one = 0
-    point_all_two = 0
-    print(f'{user_one} - буквы "{", ".join(dictionary_processing(keys_one))}"')
-    print(f'{user_two} - буквы "{", ".join(dictionary_processing(keys_two))}"')
-
+def main(keys_one, point_all_one, keys_two, point_all_two):
     flag = True
-
     while True:
         if flag:
             print(f'Программа:\nХодит {user_one}')
             print('Ваши буквы: ', ", ".join(keys_one))
             user_answer = input('Пользователь:\n')
-            if user_answer == 'стоп':
+            if user_answer == 'stop':
                 break
             if len(user_answer) < 3:
                 print('Таких коротких слов нет, пробуй еще раз')
@@ -117,6 +98,29 @@ if __name__ == '__main__':
             keys_two += wer
             point_all_two += point
             flag = True
+    return point_all_one, point_all_two
 
 
-search_winner()
+def beginning_game():
+    print('Программа:\nПривет.\nМы начинаем играть в Scrabble\n\nКак зовут первого игрока? ')
+
+    user_one_name = input('Пользователь:\n')
+
+    print('Программа:\nКак зовут второго игрока? ')
+
+    user_two_name = input('Пользователь:\n')
+
+    print(f'Программа:\n{user_one_name} vs {user_two_name}\n(раздаю случайные буквы)')
+    print(f'{user_one_name} - буквы "{", ".join(dictionary_processing(keys_one))}"')
+    print(f'{user_two_name} - буквы "{", ".join(dictionary_processing(keys_two))}"')
+    return user_one_name, user_two_name
+
+
+if __name__ == '__main__':
+    keys_one = []
+    keys_two = []
+    point_all_one = 0
+    point_all_two = 0
+    user_one, user_two = beginning_game()
+    point_all_one, point_all_two = main(keys_one, point_all_one, keys_two, point_all_two)
+    search_winner()
