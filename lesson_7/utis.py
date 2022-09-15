@@ -59,10 +59,10 @@ def check_fitness(student: dict, profession: dict) -> dict:
     :return: dict
     """
     has_student = list(set(student['skills']).intersection(set(profession['skills'])))
-    if len(has_student) == 0:
-        has_student = ['0', 'языков']
     lacks = list(set(profession['skills']).difference(set(student['skills'])))
     fit_percent = round((len(has_student) / len(profession['skills']) * 100))
+    if len(has_student) == 0:
+        has_student = ['0', 'языков']
     return {"has": has_student,
             "lacks": lacks,
             "fit_percent": fit_percent}
