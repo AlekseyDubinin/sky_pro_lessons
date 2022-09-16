@@ -16,6 +16,11 @@ def main() -> None:
         print(f'Программа: Студент {dict_student["full_name"]}\n'
               f'Программа: Знает {", ".join(dict_student["skills"])}')
 
+        if not login_verification(dict_student["login"]):
+            print(f'Но студент {dict_student["full_name"]} не умеет придумывать логины\n'
+                  f'Логин {dict_student["login"]} не прошел проверку')
+            return
+
     prof = input(f'Программа: Выберите специальность для оценки студента {dict_student["full_name"]}\n'
                  f'Пользователь: ')
 

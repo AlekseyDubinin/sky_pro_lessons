@@ -1,4 +1,16 @@
 import json
+import re
+
+
+def login_verification(user_login: str) -> bool:
+    pattern = '^([^A-Z])(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])' \
+              '[A-Za-z\d@$!%*?&]{5,10}[^@$!%*?&_-]$'
+    result = re.match(pattern, user_login)
+
+    if result is None:
+        return False
+
+    return True
 
 
 def load_students() -> list:
