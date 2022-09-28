@@ -34,7 +34,10 @@ class Engine(ABC):
             for i in range(1, 40):
                 print('Парсинг страниц', i)
                 html = self.get_html(url=url, headers=self.HEADERS,  params={'page': i,
-                                                                             self.keys_prof: self.profession_name})
+                                                                           self.keys_prof: self.profession_name})
+                if len(self.get_content(html.text)) == 0:
+                    print(f'Больше вакансий на {self.name} нет')
+                    break
                 count.extend(self.get_content(html.text))
             return count
         else:
