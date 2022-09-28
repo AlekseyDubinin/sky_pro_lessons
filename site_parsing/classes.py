@@ -12,7 +12,7 @@ class Engine(ABC):
     }
 
     @abstractmethod
-    def __init__(self, profession_name, name, keys_prof):
+    def __init__(self, profession_name: str, name: str, keys_prof: str):
         self.profession_name = profession_name
         self.name = name
         self.keys_prof = keys_prof
@@ -22,16 +22,16 @@ class Engine(ABC):
         pass
 
     @staticmethod
-    def get_html(url, headers, params=None):
+    def get_html(url: str, headers: dict, params=None):
         r = requests.get(url, headers=headers, params=params)
         return r
 
-    def parser(self, url):
+    def parser(self, url: str):
         html = self.get_html(url=url, headers=self.HEADERS)
         if html.status_code == 200:
             count = []
             print(f'Парсинг сайта {self.name}')
-            for i in range(1, 10):
+            for i in range(1, 40):
                 print('Парсинг страниц', i)
                 html = self.get_html(url=url, headers=self.HEADERS,  params={'page': i,
                                                                              self.keys_prof: self.profession_name})
@@ -87,3 +87,16 @@ class Superjob(Engine):
                 }
             )
         return vacans
+
+
+class Vacancy:
+    def __init__(self, job_title: str, job_link: str, vacancy_description: str, salary_vacancies: int):
+        self.salary_vacancies = salary_vacancies
+        self.vacancy_description = vacancy_description
+        self.job_link = job_link
+        self.job_title = job_title
+
+    def __repr__(self):
+        return f'Название вакансии:  {self.job_title} -- зарплата: {self.salary_vacancies} руб.\n' \
+               f'ссылка на вакансию: {self.job_link}\n' \
+               f'Описание вакансии: \n{self.vacancy_description}\n'
