@@ -1,4 +1,4 @@
-from utils import *
+from utils import withdrawal_highest_salaries, print_first_10, output_random_20, data_collection
 
 
 method_dict = {

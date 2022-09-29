@@ -5,8 +5,10 @@ from classes import *
 import json
 import re
 
-with open('HH_Superjob_vacancy.json', 'r', encoding='utf-8') as file:
-    f = json.load(file)
+
+def open_file():
+    with open('HH_Superjob_vacancy.json', 'r', encoding='utf-8') as file:
+        return json.load(file)
 
 
 def data_collection(profession: str) -> None:
@@ -21,7 +23,6 @@ def data_collection(profession: str) -> None:
     superjob = Superjob(profession)
     superjob2 = superjob.parser(url=superjob.URL)
     site_all = hh2 + superjob2
-    correct_salary(site_all)
 
     with open('HH_Superjob_vacancy.json', 'w') as file:
         json.dump(site_all, file, indent=4, ensure_ascii=False)
@@ -30,26 +31,12 @@ def data_collection(profession: str) -> None:
     time.sleep(2)
 
 
-def correct_salary(all_dict: dict) -> None:
-    """
-    Функция обрабатывает поле salary в словаре и преобразует в int
-    :param all_dict: словарь с вакансиями
-    :return:
-    """
-    for i in all_dict:
-        num = re.findall(r'\d+', i["salary"])
-        if len(num) == 0:
-            i["salary"] = 0
-        else:
-            i["salary"] = int(max(num))
-
-
 def withdrawal_highest_salaries() -> None:
     """
     Функция фильтрует файл с вакансиями и выводит топ 5 высокооплач.
     :return:
     """
-    file_all = sorted(f, key=lambda x: x['salary'], reverse=True)[:5]
+    file_all = sorted(open_file(), key=lambda x: int(x['salary']), reverse=True)[:5]
     for items in file_all:
         time.sleep(1)
         correct_output(items)
@@ -60,7 +47,7 @@ def print_first_10() -> None:
     Функция выводит первые 10 вакансий.
     :return:
     """
-    for items in f[:10]:
+    for items in open_file()[:10]:
         time.sleep(1)
         correct_output(items)
 
@@ -70,8 +57,8 @@ def output_random_20() -> None:
     Функция выводит случайные 20 вакансий.
     :return:
     """
-    random.shuffle(f)
-    for iters in f[:20]:
+    random.shuffle(open_file())
+    for iters in open_file()[:20]:
         time.sleep(1)
         correct_output(iters)
 
