@@ -1,0 +1,5 @@
+host = '127.0.0.1'
+user = 'postgres'
+password = 'Kamchatka33'
+db_name = 'stor_db'
+port = '5432'
