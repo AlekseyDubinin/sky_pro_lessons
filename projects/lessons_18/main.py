@@ -181,19 +181,19 @@ def user_add(cur):
 if __name__ == '__main__':
     conn = db_connect()
     cursor = conn.cursor()
-    creat_shelter_info(cursor)
-    creat_animal_dict(cursor)
     creat_type_dict(cursor)
     creat_breed_dict(cursor)
     creat_colour_dict(cursor)
     creat_outcome_subtype(cursor)
     creat_outcome_type(cursor)
+    creat_animal_dict(cursor)
+    creat_shelter_info(cursor)
 
-    entry_shelter_info(cursor)
-    entry_animal_dict(cursor)
     entry_type_dict(cursor)
     entry_breed_dict(cursor)
     entry_colour_dict(cursor)
     entry_outcome_subtype(cursor)
     entry_outcome_type(cursor)
+    entry_animal_dict(cursor)
+    entry_shelter_info(cursor)
 
