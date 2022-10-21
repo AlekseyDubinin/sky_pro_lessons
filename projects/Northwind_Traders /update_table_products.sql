@@ -1,3 +1,4 @@
+ALTER TABLE products ADD id_suppliers integer REFERENCES suppliers (id);
 
         UPDATE products 
         SET id_suppliers = 1 
